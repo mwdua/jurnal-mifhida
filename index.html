@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Manajemen Pendidikan - YPI Miftahul Hidayah</title>
+    
+    <!-- Google Fonts: Poppins & Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Libraries via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/html5-qrcode" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
+    
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer crossorigin="anonymous"></script>
+  </head>
+  <body class="bg-app-bg font-body text-text-main">
+    <div id="app" class="flex min-h-screen">
+      <div id="auth-container" class="fixed inset-0 z-50 flex items-center justify-center bg-app-bg">
+        <div class="w-full max-w-md p-8 text-center bg-white rounded-2xl shadow-xl">
+          <div class="mb-6 flex justify-center">
+            <img src="https://res.cloudinary.com/maswardi/image/upload/v1770822838/mifhida_hretkz.png" 
+                 onerror="this.src='https://ui-avatars.com/api/?name=M&background=1B4332&color=fff'" 
+                 alt="Logo" class="h-24 w-auto">
+          </div>
+          <h1 class="mb-2 text-2xl font-bold font-heading text-primary">YPI Miftahul Hidayah</h1>
+          <p class="mb-8 text-sm text-text-muted px-4">Sistem Informasi Kehadiran & Akademik Terpadu (SIKAD). Silakan login untuk melanjutkan.</p>
+          <div id="google-login-btn" class="flex justify-center"></div>
+        </div>
+      </div>
+
+      <!-- Main Layout (hidden until auth) -->
+      <div id="main-layout" class="hidden flex w-full">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform bg-gradient-to-b from-primary to-primary-dark transition-transform duration-300 md:relative md:translate-x-0 shadow-lg border-r border-primary-dark/50">
+          <div class="flex flex-col h-full text-white">
+            <div class="p-4 border-b border-white/10 flex items-center space-x-3">
+              <img src="https://res.cloudinary.com/maswardi/image/upload/v1770822838/mifhida_hretkz.png" 
+                   onerror="this.src='https://ui-avatars.com/api/?name=M&background=1B4332&color=fff'"
+                   alt="Logo" class="h-10 w-auto">
+              <div>
+                <h2 class="text-sm font-bold font-heading tracking-wider leading-tight">MIFT AHUL HIDAYAH</h2>
+                <p class="text-[10px] text-emerald-100 uppercase">YPI Unggul & Terpadu</p>
+              </div>
+            </div>
+            
+            <nav class="flex-grow px-3 py-4 space-y-0.5 overflow-y-auto" id="main-nav">
+              <!-- JS will inject navigation based on role here -->
+            </nav>
+            
+            <div class="p-4 border-t border-white/10 text-white">
+              <div class="flex items-center space-x-3 mb-4">
+                <div id="user-avatar" class="h-10 w-10 rounded-full bg-emerald-700 overflow-hidden ring-2 ring-emerald-500/30">
+                  <!-- Avatar Image -->
+                </div>
+                <div class="overflow-hidden">
+                  <p id="user-name" class="text-sm font-semibold truncate"></p>
+                  <p id="user-role" class="text-xs text-emerald-100 uppercase tracking-wider"></p>
+                </div>
+              </div>
+              <button id="logout-btn" class="flex items-center space-x-2 text-sm text-emerald-100 hover:text-white transition-colors">
+                <i data-lucide="log-out" class="h-4 w-4"></i>
+                <span>Keluar Sistem</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black/50 md:hidden"></div>
+
+        <!-- Content Area -->
+        <div class="flex flex-col flex-grow w-full">
+          <!-- Header -->
+          <header class="bg-surface px-6 py-4 shadow-sm border-b border-border-light flex items-center justify-between sticky top-0 z-20">
+            <div class="flex items-center space-x-4">
+              <button id="mobile-menu-btn" class="p-1 md:hidden text-text-main">
+                <i data-lucide="menu" class="h-6 w-6"></i>
+              </button>
+              <h3 id="current-page-title" class="text-lg font-semibold text-text-main font-heading">Dashboard</h3>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span id="current-date" class="hidden sm:block text-sm text-text-muted font-medium"></span>
+              <div class="h-8 w-8 rounded-full bg-accent flex items-center justify-center text-white shadow-sm ring-2 ring-accent/20">
+                <i data-lucide="bell" class="h-4 w-4"></i>
+              </div>
+            </div>
+          </header>
+
+          <!-- Main Content -->
+          <main id="content-viewport" class="p-6 overflow-y-auto flex-grow">
+            <!-- Dynamic content injected here -->
+          </main>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+

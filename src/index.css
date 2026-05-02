@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Nunito", sans-serif;
+  
+  --color-primary: #1B4332;
+  --color-primary-dark: #0D2117;
+  --color-secondary: #2D6A4F;
+  --color-accent: #D4AF37;
+  --color-accent-dark: #B8960C;
+
+  --color-app-bg: #F5F0E8;
+  --color-surface: #FFFFFF;
+  
+  --color-text-main: #2C2C1E;
+  --color-text-muted: #8B7D5A;
+  --color-border-light: #E8E0D0;
+
+  --color-success: #1B5E20;
+  --color-success-bg: #D8F3DC;
+  --color-danger: #7B1A1A;
+  --color-danger-bg: #FDECEA;
+  --color-warning: #7B5500;
+  --color-warning-bg: #F5E6A3;
+  --color-info: #1A3A6A;
+  --color-info-bg: #EBF4FF;
+
+  --shadow-custom: 0 4px 20px -5px rgba(27, 67, 50, 0.15);
+}
+
+@layer base {
+  body {
+    @apply bg-app-bg text-text-main font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight text-text-main;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95;
+  }
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-secondary hover:shadow-lg focus:ring-primary;
+  }
+  .btn-accent {
+    @apply bg-accent text-white hover:bg-accent-dark hover:shadow-lg focus:ring-accent;
+  }
+  .btn-outline {
+    @apply border-2 border-border-light text-text-main hover:bg-white focus:ring-border-light;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-custom border border-border-light p-6 transition-all duration-300;
+  }
+  .card:hover {
+    @apply shadow-lg border-primary/20;
+  }
+  
+  .nav-link {
+    @apply flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm text-emerald-100 hover:bg-white/10 hover:text-accent transition-all duration-300;
+  }
+  .nav-link.active {
+    @apply bg-accent/10 text-accent font-bold shadow-inner ring-1 ring-accent/30;
+  }
+
+  .input-field {
+    @apply w-full p-3 border border-border-light rounded-xl bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-text-main;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+  }
+  .badge-success {
+    @apply bg-success-bg text-success;
+  }
+  .badge-danger {
+    @apply bg-danger-bg text-danger;
+  }
+  .badge-warning {
+    @apply bg-warning-bg text-warning;
+  }
+  .badge-info {
+    @apply bg-info-bg text-info;
+  }
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply w-8 h-8 border-4 border-slate-200 border-t-primary rounded-full animate-spin;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300/50 rounded-full hover:bg-slate-400;
+}
+
+@page {
+  size: A4;
+  margin: 1cm;
+}
+
+@media print {
+  body.printing-cards * {
+    visibility: hidden;
+  }
+  
+  body.printing-cards #print-area,
+  body.printing-cards #print-area * {
+    visibility: visible;
+  }
+  
+  body.printing-cards #print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid !important;
+    grid-template-columns: repeat(2, 7cm);
+    grid-auto-rows: 10.5cm;
+    column-gap: 0.5cm;
+    row-gap: 0.5cm;
+    justify-content: center;
+    align-content: start;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .id-card {
+    width: 7cm !important;
+    height: 10.5cm !important;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+}

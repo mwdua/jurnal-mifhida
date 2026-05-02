@@ -1,0 +1,12 @@
+{
+  "name": "Sistem Manajemen Pendidikan YPI Miftahul Hidayah",
+  "description": "Sistem Manajemen Pendidikan Terpadu untuk KB, TK, dan SD YPI Miftahul Hidayah Gonggang. Menangani absensi QR, penilaian Kurikulum Merdeka, dan manajemen siswa.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "auth",
+    "database",
+    "camera"
+  ]
+}
